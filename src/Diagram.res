@@ -104,7 +104,15 @@ let make = (
     | Some(container) =>
       container
       ->Diagram__Layout.get
-      ->Diagram__Layout.registerListener(onLayoutUpdate->Belt.Option.getWithDefault(() => ()))
+      ->Diagram__Layout.registerListener(
+        onLayoutUpdate->Belt.Option.getWithDefault((_, _, _) => ()),
+      )
+      container
+      ->Diagram__Layout.get
+      ->Diagram__Layout.onUpdate(
+        container->Diagram__Transform.get->Diagram__Transform.getBBox,
+        container->Diagram__Transform.get->Diagram__Transform.scale,
+      )
     | None => ()
     }
     None

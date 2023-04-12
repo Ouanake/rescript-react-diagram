@@ -128,7 +128,10 @@ module App = {
         selectionZoom=true
         boundingBox=true
         commands={diagramCommands}
-        onLayoutUpdate={() => Diagram.fitToView(diagramCommands)}>
+        onLayoutUpdate={(w, h, s) => {
+          Js.log4("LayoutUpdated", w, h, s)
+          Diagram.fitToView(diagramCommands)
+        }}>
         {nodes->renderArray(nodeId =>
           <Diagram.Node
             key={nodeId}
