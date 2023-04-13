@@ -1,6 +1,6 @@
 {
     "name": "@ouanake/rescript-react-diagram",
-    "version": "1.0.9-beta",
+    "version": "1.0.9-beta2",
     "author": "Hervé Giraud",
     "description": "Easy to use automatic diagram layout component in react",
     "license": "MIT",

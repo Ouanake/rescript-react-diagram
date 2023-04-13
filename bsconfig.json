@@ -1,5 +1,5 @@
 {
-    "name": "@giraud/rescript-react-diagram",
+    "name": "@ouanake/rescript-react-diagram",
     "sources": ["src", "src/interop",
         {
             "dir": "example",
