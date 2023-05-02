@@ -1,5 +1,11 @@
 type t
-
+type ranker = [#"network-simplex" | #"tight-tree" | #"longest-path"]
+type options = {
+  nodesep: int,
+  edgesep: int,
+  ranksep: int,
+  ranker: ranker,
+}
 type orientation = [#vertical | #horizontal]
 type labelPos = [#left(float) | #center | #right(float)]
 
@@ -16,10 +22,10 @@ let processEdges: (t, (. string, Diagram__Dagre.edgeInfo) => unit) => unit
 
 let run: (t, Dom.element) => unit
 let reset: t => unit
-let registerListener: (t, (float, float, float) => unit) => unit
-let onUpdate: (t, (float, float), float) => unit
+let registerListener: (t, unit => unit) => unit
+let onUpdate: t => unit
 
-let make: unit => t
+let make: options => t
 
 @set external attach: (Dom.element, t) => unit = "layout"
 @get external get: Dom.element => t = "layout"

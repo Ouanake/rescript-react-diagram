@@ -3,7 +3,7 @@ module DataNodeReactRoot = {
   @get external detach: Dom.element => Js.nullable<'a> = "_reactRootContainer"
 }
 
-let render = (element, container, onCreation) => {
+let render = (element, container, options, onCreation) => {
   let root = switch container->DataNodeReactRoot.detach->Js.toOption {
   | Some(node) => node
   | None =>
@@ -16,7 +16,7 @@ let render = (element, container, onCreation) => {
 
     let newRoot = Diagram__DOMReconciler.reconciler.createContainer(. container)
     let transform = Diagram__Transform.make()
-    let layout = Diagram__Layout.make()
+    let layout = Diagram__Layout.make(options)
 
     container->DataNodeReactRoot.attach(newRoot)
     container->Diagram__Transform.attach(transform)

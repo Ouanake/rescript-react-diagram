@@ -125,13 +125,12 @@ module App = {
         width="100%"
         height="100%"
         orientation
-        selectionZoom=true
+        minScale=0.1
+        maxScale=1.5
+        selectionZoom=false
         boundingBox=true
         commands={diagramCommands}
-        onLayoutUpdate={(w, h, s) => {
-          Js.log4("LayoutUpdated", w, h, s)
-          Diagram.fitToView(diagramCommands)
-        }}>
+        onLayoutUpdate={() => Js.log("LayoutUpdate")}>
         {nodes->renderArray(nodeId =>
           <Diagram.Node
             key={nodeId}
@@ -155,13 +154,55 @@ module App = {
         // <Diagram.Map className="minimap" />
       </Diagram>
       <div className="info">
-        {"Use middle mouse button to drag, mouse wheel to zoom"->React.string}
+        {"Use middle mouse button to drag, mouse ctrl+wheel to zoom"->React.string}
+      </div>
+      <div className="container">
+        <div className="scrollBox">
+          <Diagram
+            className="diagram"
+            orientation
+            minScale=1.0
+            maxScale=1.0
+            selectionZoom=false
+            boundingBox=false>
+            {nodes->renderArray(nodeId =>
+              <Diagram.Node
+                key={nodeId}
+                nodeId={nodeId}
+                className={start == nodeId ? "start" : end == nodeId ? "end" : ""}
+                onClick={_ => selectNode(nodeId)}>
+                {("Node " ++ nodeId)->React.string}
+              </Diagram.Node>
+            )}
+            {edges->renderArray(((source, target, label)) =>
+              <Diagram.Edge
+                key={source ++ "-" ++ target}
+                source
+                target
+                label={label->Js.String2.length == 0
+                  ? "edge from " ++ source ++ " to " ++ target
+                  : label}
+                onClick={_ => selectNodes(source, target)}
+              />
+            )}
+            // <Diagram.Map className="minimap" />
+          </Diagram>
+        </div>
+        <div className="info" style={ReactDOM.Style.make(~top="5px", ())}>
+          {"Use scrollbars to scroll the diagram"->React.string}
+        </div>
       </div>
     </main>
   }
 }
 
 switch getElementById("root")->Js.toOption {
-| Some(root) => ReactDOM.render(<React.StrictMode> <App /> </React.StrictMode>, root)
+| Some(root) =>
+  ReactDOM.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+    root,
+  )
 | None => ()
 }

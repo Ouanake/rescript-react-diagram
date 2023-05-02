@@ -1,11 +1,19 @@
+type ranker = [#"network-simplex" | #"tight-tree" | #"longest-path"]
+type options = {
+  nodesep: int,
+  edgesep: int,
+  ranksep: int,
+  ranker: ranker,
+}
 type orientation = [#vertical | #horizontal]
 type labelPos = [#left(float) | #center | #right(float)]
 
 type t = {
   engine: ref<Diagram__Dagre.t>,
-  listener: ref<(float, float, float) => unit>,
+  listener: ref<unit => unit>,
   displayBBox: ref<bool>,
   orientation: ref<orientation>,
+  options: ref<options>,
 }
 
 let displayBBox = layout => layout.displayBBox.contents
@@ -171,10 +179,22 @@ let run = (layout, container) => {
   )
 }
 
+let optionsArray = (options: options) => [
+  ("nodesep", options.nodesep->string_of_int),
+  ("edgesep", options.edgesep->string_of_int),
+  ("ranksep", options.ranksep->string_of_int),
+  ("ranker", (options.ranker :> string)),
+]
+
 let reset = layout => {
   let engine = Diagram__Dagre.make({"multigraph": true})
   engine->Diagram__Dagre.setGraph(
-    Js.Dict.fromArray([("rankdir", layout.orientation.contents->orientationToString)]),
+    Js.Dict.fromArray(
+      Belt.Array.concat(
+        layout.options.contents->optionsArray,
+        [("rankdir", layout.orientation.contents->orientationToString)],
+      ),
+    ),
   )
   engine->Diagram__Dagre.setDefaultEdgeLabel(_ => Js.Obj.empty())
 
@@ -182,20 +202,24 @@ let reset = layout => {
 }
 
 let registerListener = (layout, listener) => layout.listener.contents = listener
-let onUpdate = (layout, (width, height), scale) => {
-  layout.listener.contents(width, height, scale)
+
+let onUpdate = layout => {
+  layout.listener.contents()
 }
 
-let make = () => {
+let make = (options: options) => {
   let engine = Diagram__Dagre.make({"multigraph": true})
-  engine->Diagram__Dagre.setGraph(Js.Dict.fromArray([("rankdir", "TB")]))
+  engine->Diagram__Dagre.setGraph(
+    Js.Dict.fromArray(Belt.Array.concat(options->optionsArray, [("rankdir", "TB")])),
+  )
   engine->Diagram__Dagre.setDefaultEdgeLabel(_ => Js.Obj.empty())
 
   {
     engine: ref(engine),
-    listener: ref((_, _, _) => ()),
+    listener: ref(() => ()),
     displayBBox: ref(false),
     orientation: ref(#vertical),
+    options: ref(options),
   }
 }
 

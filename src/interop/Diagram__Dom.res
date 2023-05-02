@@ -31,6 +31,8 @@ module Window = {
 @send external setAttribute: (Dom.element, string, string) => unit = "setAttribute"
 @send external removeAttribute: (Dom.element, string) => unit = "removeAttribute"
 @send external addEventListener: (Dom.element, string, 'a) => unit = "addEventListener"
+@send
+external addEventListenerWithOptions: (Dom.element, string, 'a, 'b) => unit = "addEventListener"
 @send external removeEventListener: (Dom.element, string, 'a) => unit = "removeEventListener"
 @send external getBoundingClientRect: Dom.element => domRect = "getBoundingClientRect"
 @send external closest: (Dom.element, string) => Js.nullable<Dom.element> = "closest"
@@ -82,6 +84,7 @@ let setTransform = (node, x, y, scale) =>
   )
 
 @send external stopPropagation: (ReactEvent.Mouse.t, unit) => unit = "stopPropagation"
+@send external preventDefault: (ReactEvent.Mouse.t, unit) => unit = "preventDefault"
 @get external mouseEventTarget: ReactEvent.Mouse.t => Dom.element = "target"
 @get external mouseEventButton: ReactEvent.Mouse.t => int = "button"
 @get external mousePointerId: ReactEvent.Mouse.t => string = "pointerId"

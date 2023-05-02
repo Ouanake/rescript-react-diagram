@@ -32,9 +32,10 @@ body {
 
 main {
     display: grid;
-    grid-template-rows: min-content 1fr;
+    grid-template-rows: min-content 1fr auto;
     grid-gap: 10px;
 }
+
 
 .toolbar {
     display: flex;
@@ -48,6 +49,19 @@ main {
     margin-left: auto;
     text-align: right;
     color: var(--color-text)
+}
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid var(--color-border);
+    position: relative;
+}
+.scrollBox {
+    overflow: auto;
+    width: 300px;
+    height: 300px;
+    border: 1px solid var(--color-border);
 }
 
 .info {

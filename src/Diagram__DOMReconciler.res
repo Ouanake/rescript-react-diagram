@@ -167,14 +167,10 @@ let reconciler = Diagram__ReactFiberReconciler.make(
       },
       resetAfterCommit: container => {
         let layoutUpdated = container->getDataSetLayoutUpdated
+
         // Callback onLayoutUpdate
         if layoutUpdated == "true" {
-          container
-          ->Diagram__Layout.get
-          ->Diagram__Layout.onUpdate(
-            container->Diagram__Transform.get->Diagram__Transform.getBBox,
-            container->Diagram__Transform.get->Diagram__Transform.scale,
-          )
+          container->Diagram__Layout.get->Diagram__Layout.onUpdate
           container->setDataSetLayoutUpdated("false")
         }
       },
